@@ -13,6 +13,7 @@ LabelDeaths = "No Language File Found"
 LabelScore = "No Language File Found"
 LabelPing = "No Language"
 Score = 0
+Ratio = 0
 PlayerID = 0
 Hilfsvar = 50
 Waffe = 0
@@ -62,6 +63,7 @@ Ui.BaseRect = nil
 Ui.Score = nil
 Ui.Frags = nil
 Ui.Deaths = nil
+Ui.LabelRatio = nil
 Ui.Ratio = nil 
 Ui.Fpm = nil
 Ui.GlobalRatio = nil
@@ -70,7 +72,6 @@ Ui.ID = nil
 Ui.OnlineList = nil
 Ui.Test = nil
 Ui.OnlineBox = nil
-Ui.KillBox = nil
 Ui.RatioBox = nil
 Ui.DeathBox = nil
 Ui.GlobalRatioBox = nil
@@ -116,7 +117,10 @@ Ui.ApplyBtn = nil
 Ui.PingBox = nil
 Ui.PingLabel = nil
 Ui.Ping = nil
-
+Ui.MusicPanelBox = nil
+Ui.MusicNext = nil
+Ui.MusicPlay = nil
+Ui.MusicPrev = nil
 function ConfigOpen(x, y, w, h)
 GetLanguage()
 py = y
@@ -303,95 +307,7 @@ function Tick(Time, ServerTick)
 	end
 	Ping = GetPlayerPing(GetLocalCharacterId())
 	if(MenuActive() == true and Online == 1) then
-	 UiRemoveElement(Ui.PingBox)
-	 Ui.PingBox = nil
-	 UiRemoveElement(Ui.PingLabel)
-	 Ui.PingLabel = nil
-	 UiRemoveElement(Ui.Ping)
-	 Ui.Ping = nil
-	 UiRemoveElement(Ui.ScoreBox)
-	 Ui.ScoreBox = nil
-	 UiRemoveElement(Ui.OnlineList)
-	 Ui.OnlineList = nil
-	 UiRemoveElement(Ui.OnlineBox)
-	 Ui.OnlineBox = nil
-	 UiRemoveElement(Ui.ServerIPBox)
-	 Ui.ServerIPBox = nil
-	 UiRemoveElement(Ui.SrvIP)
-	 Ui.SrvIP = nil
-	 UiRemoveElement(Ui.ConnectedTo)
-	 Ui.ConnectedTo = nil
-	 UiRemoveElement(Ui.KillStreak)
-	 Ui.KillStreak = nil
-	 UiRemoveElement(Ui.KillBox)
-	 Ui.KillBox = nil
-	 UiRemoveElement(Ui.ScoreLabel)
-	 Ui.ScoreLabel = nil
-	 UiRemoveElement(Ui.Score)
-	 Ui.Score = nil
-	 UiRemoveElement (Ui.Health)
-	 Ui.Health = nil
-	 UiRemoveElement(Ui.Armor)
-	 Ui.Armor = nil
-	 UiRemoveElement(Ui.Ammo)
-	 Ui.Ammo = nil
-	 UiRemoveElement(Ui.InfoBackground)
-	 Ui.InfoBackground = nil
-	 UiRemoveElement(Ui.AmmoPic)
-	 Ui.AmmoPic = nil
-	 UiRemoveElement(Ui.HeartPic)
-	 Ui.HeartPic = nil
-	 UiRemoveElement(Ui.ShieldPic)
-	 Ui.HeartPic = nil
-	 UiRemoveElement(Ui.KillsBox)
-	 Ui.KillsBox = nil
-	 UiRemoveElement(Ui.KillsLabel)
-	 Ui.KillsLabel = nil
-	 UiRemoveElement(Ui.DeathsBox)
-	 Ui.DeathsBox = nil
-	 UiRemoveElement(Ui.DeathsLabel)
-	 Ui.DeathsLabel = nil
-	 UiRemoveElement(Ui.Kills)
-	 Ui.Kills = nil
-	 UiRemoveElement(Ui.Deaths)
-	 Ui.Deaths = nil
-	  if (IsKog == 1) then
-	 UiRemoveElement(Ui.KOG)
-	 Ui.KOG = nil
-	 UiRemoveElement(Ui.HammerStats)
-	 Ui.HammerStats = nil
-	 UiRemoveElement(Ui.GunStats)
-	 Ui.GunStats = nil
-	 UiRemoveElement(Ui.ShotgunStats)
-	 Ui.ShotgunStats = nil
-	 UiRemoveElement(Ui.GrenadeStats)
-	 Ui.GrenadeStats = nil
-	 UiRemoveElement(Ui.RifleStats)
-	 Ui.RifleStats = nil
-	 UiRemoveElement(Ui.HandleStats)
-	 Ui.HandleStats = nil
-	 UiRemoveElement(Ui.LifeStats)
-	 Ui.LifeStats = nil
-	 UiRemoveElement(Ui.HammerPic)
-	 Ui.HammerPic = nil
-	 UiRemoveElement(Ui.GunPic)
-	 Ui.GunPic = nil
-	 UiRemoveElement(Ui.GrenadePic)
-	 Ui.GrenadePic = nil
-	 UiRemoveElement(Ui.ShotgunPic)
-	 Ui.ShotgunPic = nil
-	 UiRemoveElement(Ui.RiflePic)
-	 Ui.RiflePic = nil
-	 UiRemoveElement(Ui.HandlePic)
-	 Ui.HandlePic = nil
-	 UiRemoveElement(Ui.LifePic)
-	 Ui.LifePic = nil
-	
-	 HilfsvarOnline = 0
-	 
-	 end
-	 
-	 Online = 0
+	OptionsActive()
 	end
 	 if (Score == 0) then
 	   Hilfsvar = 50
@@ -427,20 +343,15 @@ function Tick(Time, ServerTick)
 		    GetLanguage()
 
 			
-			Width = UiGetScreenWidth()
-            Height = UiGetScreenHeight()
+	
 			--Punktezähler
-			Ui.ScoreBox = UiDoRect (-15, Height/2 - 20, 160, 55, 0, 15, 15, 0.6, 0.7, 0.1, 0.8)
-			Ui.ScoreLabel = UiDoLabel (5, Height / 2 - 15, 210, 20, 0, LabelScore, 20, -1)
-			Ui.Score = UiDoLabel (Hilfsvar, Height / 2 + 5, 150, 30, 0, Score, 30, -1)
+			UiDoScore()
+
 			--IpAdresse
-			Ui.ServerIPBox =  UiDoRect (Width / 2 + 80, 0, 200, 50, 0, 15, 15, 0.2, 0.8, 0.8, 0.5)
-			Ui.ConnectedTo = UiDoLabel (Width/2 + 85, 5, 200, 20, 0, SrvIPCon, 20, -1)
-			Ui.SrvIP = UiDoLabel (Width / 2 + 85, 25, 200, 20, 0, SrvIP, 20, -1)
+			UiDoIp()
 			--Freundesliste, N-LVL neues featureblablabla
-			Ui.OnlineBox = UiDoRect (Width - 105, Height - 505, 100, Height - 250, 0, 0, 0, 0.5)
-			Ui.OnlineList = UiDoLabel (Width - 100, Height - 500, 100, 20, 0, CurOn, 20, -1)
-			Ui.nlvlpic = UiDoImageEx (Width/2, Height/2, 25, 25, 0, Testbild2)
+			--UiDoFriendlist()
+
 			--Ammo, Health und der ganze andere müll
 			Ui.InfoBackground = UiDoRect (30, 0, 140, 90, 0, 15, 15, 0.1, 0.5, 0.9, 0.5)
 			Ui.HeartPic = UiDoImage (55, 5, 20, 20, 0, UiGetGameTextureID(1), 10, "")
@@ -458,6 +369,8 @@ function Tick(Time, ServerTick)
 			elseif (lang ~= "bul") then
 			Ui.DeathsLabel = UiDoLabel (5, Height/2 -60, 90, 20, 0, LabelDeaths, 20, -1)	
 			end
+			-- Ratio
+			UiDoRatio()
 			--Ping
 			if (lang == "bul" or lang == "tr") then
 			Ui.PingBox = UiDoRect (Width/2 - 170, 0, 100, 50, 0, 15, 15, 0.6, 0.2, 0.8, 0.6)	
@@ -470,7 +383,7 @@ function Tick(Time, ServerTick)
 			Ui.PingLabel = UiDoLabel (Width/2 - 140, 5, 50, 20, 0, LabelPing, 20, -1)
 			end
 			Ui.Ping = UiDoLabel (Width/2 - 130, 25, 50, 20, 0, Ping, 20, -1)
-
+			DoMusicPanel()
 			
 					
         end
@@ -510,31 +423,8 @@ function Tick(Time, ServerTick)
 	end
 
 	if (StateOnline() and Online == 1) then
-		UiRemoveElement(Ui.AmmoPic)
-		Ui.AmmoPic = nil
-	 			Waffe = GetLocalCharacterWeapon()
-
-		if (Waffe == 0) then
-		Ui.AmmoPic =  UiDoImage (55, 65, 20, 20, 0, UiGetGameTextureID(1), 41, "")
-		end
-		if (Waffe == 1) then
-		Ui.AmmoPic =  UiDoImage (55, 65, 20, 20, 0, UiGetGameTextureID(1), 28, "")
-		end
-		if (Waffe == 2) then
-		Ui.AmmoPic =  UiDoImage (55, 65, 20, 20, 0, UiGetGameTextureID(1), 34, "")
-		end
-		if (Waffe == 3) then
-		Ui.AmmoPic =  UiDoImage (55, 65, 20, 20, 0, UiGetGameTextureID(1), 40, "")
-		end
-		if (Waffe == 4) then
-		Ui.AmmoPic =  UiDoImage (55, 65, 20, 20, 0, UiGetGameTextureID(1), 49, "")
-		end
-		if (Waffe == 5) then
-		Ui.AmmoPic =  UiDoImage (55, 65, 20, 20, 0, UiGetGameTextureID(1), 14, "")
-		end
-		if (Waffe == nil) then
-		Ui.AmmoPic =  UiDoImage (55, 65, 20, 20, 0, UiGetGameTextureID(1), 28, "")
-		end
+	RenderRatio()
+	RenderAmmoPic()
 		
 
 		UiRemoveElement(Ui.Score)
@@ -555,6 +445,7 @@ function Tick(Time, ServerTick)
 		UiRemoveElement(Ui.Deaths)
 		Ui.Deaths = UiDoLabel (90, Height/2 - 60, 50, 20, 0, Deaths, 20, -1)
 		UiRemoveElement(Ui.Ping)
+		Ui.Ping = nil
 		if (Ping ~= nil) then
 		if (Ping <= 65 ) then
 		Ui.Ping = UiDoLabel (Width/2 - 130, 25, 50, 20, 0, Ping, 20, -1)
@@ -587,60 +478,15 @@ function Tick(Time, ServerTick)
 
 
 	if (StateOffline()) then
-	 Online = 0
-	 IsKog = 0
-	 UiRemoveElement(Ui.OnlineList)
-	 UiRemoveElement(Ui.OnlineBox)
-	 UiRemoveElement(Ui.ServerIPBox)
-	 UiRemoveElement(Ui.SrvIP)
-	 UiRemoveElement(Ui.ConnectedTo)
-	 UiRemoveElement(Ui.KillStreak)
-	 UiRemoveElement(Ui.KillBox)
-	 UiRemoveElement(Ui.ScoreLabel)
-	 UiRemoveElement(Ui.Score)
-	 UiRemoveElement (Ui.Health)
-	 UiRemoveElement(Ui.Armor)
-	 UiRemoveElement(Ui.Ammo)
-	 UiRemoveElement(Ui.InfoBackground)
-	 UiRemoveElement(Ui.AmmoPic)
-	 UiRemoveElement(Ui.HeartPic)
-	 UiRemoveElement(Ui.ShieldPic)
-	 UiRemoveElement(Ui.ScoreBox)
-	 UiRemoveElement(Ui.KillsBox)
-	 UiRemoveElement(Ui.KillsLabel)
-	 UiRemoveElement(Ui.DeathsBox)
-	 UiRemoveElement(Ui.DeathsLabel)
-	 UiRemoveElement(Ui.Kills)
-	 UiRemoveElement(Ui.Deaths)
-	 UiRemoveElement(Ui.KOG)
-	 UiRemoveElement(Ui.HammerStats)
-	 UiRemoveElement(Ui.GunStats)
-	 UiRemoveElement(Ui.ShotgunStats)
-	 UiRemoveElement(Ui.GrenadeStats)
-	 UiRemoveElement(Ui.RifleStats)
-	 UiRemoveElement(Ui.HandleStats)
-	 UiRemoveElement(Ui.LifeStats)
-	 UiRemoveElement(Ui.HammerPic)
-	 UiRemoveElement(Ui.GunPic)
-	 UiRemoveElement(Ui.GrenadePic)
-	 UiRemoveElement(Ui.ShotgunPic)
-	 UiRemoveElement(Ui.RiflePic)
-	 UiRemoveElement(Ui.HandlePic)
-	 UiRemoveElement(Ui.LifePic)
-	 UiRemoveElement(Ui.PingBox)
-	 Ui.PingBox = nil
-	 UiRemoveElement(Ui.PingLabel)
-	 Ui.PingLabel = nil
-	 UiRemoveElement(Ui.Ping)
-	 Ui.Ping = nil
-	 HilfsvarLoggedIn = 0
-	 Hilfsvar2 = 0
-	 HilfsvarOnline = 0
-	 Kills = 0
-	 Deaths = 0
-	 Waffe = nil
-	 Ui.AmmoPic = nil
+	 OfflineRemoveHud()
     end
+
+end
+
+function DoMusicPanel()
+Ui.MusicPanelBox = UiDoRect (20, Height/2 + 150, 300, 150, 0, 15, 15, 1, 1, 1, 0.1)
+Ui.MusicPrev = UiDoButton (30, Height/2 + 150, 40, 40, 0, "<<", "MusicPrev")
+UiSetColor(Ui.MusicPrev, 1, 1, 1, 0.1)
 
 end
 
@@ -677,4 +523,310 @@ function ReadStats()
     
 
 end
+function UiDoScore()
+	Ui.ScoreBox = UiDoRect (-15, Height/2 - 20, 160, 55, 0, 15, 15, 0.6, 0.7, 0.1, 0.8)
+	Ui.ScoreLabel = UiDoLabel (5, Height / 2 - 15, 210, 20, 0, LabelScore, 20, -1)
+	Ui.Score = UiDoLabel (Hilfsvar, Height / 2 + 5, 150, 30, 0, Score, 30, -1)
+end
 
+function OfflineRemoveHud()
+Online = 0
+	 IsKog = 0
+	 UiRemoveElement(Ui.OnlineList)
+	 Ui.OnlineList = nil
+	 UiRemoveElement(Ui.OnlineBox)
+	 Ui.OnlineBox = nil
+	 UiRemoveElement(Ui.ServerIPBox)
+	 Ui.ServerIPBox = nil
+	 UiRemoveElement(Ui.SrvIP)
+	 Ui.SrvIP = nil
+	 UiRemoveElement(Ui.ConnectedTo)
+	 Ui.ConnectedTo = nil
+	 UiRemoveElement(Ui.KillStreak)
+	 Ui.KillStreak = nil
+	 UiRemoveElement(Ui.ScoreLabel)
+	 Ui.ScoreLabel = nil
+	 UiRemoveElement(Ui.Score)
+	 Ui.Score = nil
+	 UiRemoveElement (Ui.Health)
+	 Ui.Health = nil
+	 UiRemoveElement(Ui.Armor)
+	 Ui.Armor = nil
+	 UiRemoveElement(Ui.Ammo)
+	 Ui.Ammo = nil
+	 UiRemoveElement(Ui.InfoBackground)
+	 Ui.InfoBackground = nil
+	 UiRemoveElement(Ui.AmmoPic)
+	 Ui.AmmoPic = nil
+	 UiRemoveElement(Ui.HeartPic)
+	 Ui.HeartPic = nil
+	 UiRemoveElement(Ui.ShieldPic)
+	 Ui.ShieldPic = nil
+	 UiRemoveElement(Ui.ScoreBox)
+	 Ui.ScoreBox = nil
+	 UiRemoveElement(Ui.KillsBox)
+	 Ui.KillsBox = nil
+	 UiRemoveElement(Ui.KillsLabel)
+	 Ui.KillsLabel = nil
+	 UiRemoveElement(Ui.DeathsBox)
+	 Ui.DeathsBox = nil
+	 UiRemoveElement(Ui.DeathsLabel)
+	 Ui.DeathsLabel = nil
+	 UiRemoveElement(Ui.Kills)
+	 Ui.Kills = nil
+	 UiRemoveElement(Ui.Deaths)
+	 Ui.Deaths = nil
+	 UiRemoveElement(Ui.KOG)
+	 Ui.KOG = nil
+	 UiRemoveElement(Ui.HammerStats)
+	 Ui.HammerStats = nil
+	 UiRemoveElement(Ui.GunStats)
+	 Ui.GunStats = nil
+	 UiRemoveElement(Ui.ShotgunStats)
+	 Ui.ShotgunStats = nil
+	 UiRemoveElement(Ui.GrenadeStats)
+	 Ui.GrenadeStats = nil
+	 UiRemoveElement(Ui.RifleStats)
+	 Ui.RifleStats = nil
+	 UiRemoveElement(Ui.HandleStats)
+	 Ui.HandleStats = nil
+	 UiRemoveElement(Ui.LifeStats)
+	 Ui.LifeStats = nil
+	 UiRemoveElement(Ui.HammerPic)
+	 Ui.HammerPic = nil
+	 UiRemoveElement(Ui.GunPic)
+	 Ui.GunPic = nil
+	 UiRemoveElement(Ui.GrenadePic)
+	 Ui.GrenadePic = nil
+	 UiRemoveElement(Ui.ShotgunPic)
+	 Ui.ShotgunPic = nil
+	 UiRemoveElement(Ui.RiflePic)
+	 Ui.RiflePic = nil
+	 UiRemoveElement(Ui.HandlePic)
+	 Ui.HandlePic = nil
+	 UiRemoveElement(Ui.LifePic)
+	 Ui.LifePic = nil
+	 UiRemoveElement(Ui.PingBox)
+	 Ui.PingBox = nil
+	 UiRemoveElement(Ui.PingLabel)
+	 Ui.PingLabel = nil
+	 UiRemoveElement(Ui.Ping)
+	 Ui.Ping = nil
+	 UiRemoveElement(Ui.MusicPanelBox)
+	 Ui.MusicPanelBox = nil
+	 UiRemoveElement(Ui.MusicPrev)
+	 Ui.MusicPrev = nil
+	 UiRemoveElement(Ui.RatioBox)
+	 Ui.RatioBox = nil
+	 UiRemoveElement(Ui.LabelRatio)
+	 Ui.LabelRatio = nil
+	 HilfsvarLoggedIn = 0
+	 Hilfsvar2 = 0
+	 HilfsvarOnline = 0
+	 Kills = 0
+	 Deaths = 0
+	 Waffe = nil
+	 Ui.AmmoPic = nil
+
+end
+
+function OptionsActive()
+RemovePing()
+RemoveFriendlist()
+RemoveIpAddress()
+RemoveScore()
+RemoveHudUi()
+RemoveMusicPanel()
+RemoveKills()
+RemoveDeaths()
+	 UiRemoveElement(Ui.KillStreak)
+	 Ui.KillStreak = nil
+
+
+	  if (IsKog == 1) then
+	 RemoveKog()
+	 end
+	 
+	 Online = 0
+	end
+
+function RemovePing()
+	 UiRemoveElement(Ui.PingBox)
+	 Ui.PingBox = nil
+	 UiRemoveElement(Ui.PingLabel)
+	 Ui.PingLabel = nil
+	 UiRemoveElement(Ui.Ping)
+	 Ui.Ping = nil
+end
+
+function RemoveRatio()
+	 UiRemoveElement(Ui.RatioBox)
+	 Ui.RatioBox = nil
+	 UiRemoveElement(Ui.LabelRatio)
+	 Ui.LabelRatio = nil
+	 UiRemoveElement(Ui.Ratio)
+	 Ui.Ratio = nil
+end
+function RemoveFriendlist()
+	UiRemoveElement(Ui.OnlineList)
+	Ui.OnlineList = nil
+	UiRemoveElement(Ui.OnlineBox)
+	Ui.OnlineBox = nil
+end
+
+function RemoveIpAddress()
+	 UiRemoveElement(Ui.ServerIPBox)
+	 Ui.ServerIPBox = nil
+	 UiRemoveElement(Ui.SrvIP)
+	 Ui.SrvIP = nil
+	 UiRemoveElement(Ui.ConnectedTo)
+	 Ui.ConnectedTo = nil
+end
+
+function RemoveScore()
+	UiRemoveElement(Ui.ScoreBox)
+	 Ui.ScoreBox = nil
+	 UiRemoveElement(Ui.ScoreLabel)
+	 Ui.ScoreLabel = nil
+	 UiRemoveElement(Ui.Score)
+	 Ui.Score = nil
+end
+
+function RemoveHudUi()
+	 UiRemoveElement(Ui.InfoBackground)
+	 Ui.InfoBackground = nil
+	 UiRemoveElement(Ui.InfoBackground)
+	 Ui.InfoBackground = nil
+	 UiRemoveElement (Ui.Health)
+	 Ui.Health = nil
+	 UiRemoveElement(Ui.Armor)
+	 Ui.Armor = nil
+	 UiRemoveElement(Ui.Ammo)
+	 Ui.Ammo = nil
+	 UiRemoveElement(Ui.AmmoPic)
+	 Ui.AmmoPic = nil
+	 UiRemoveElement(Ui.HeartPic)
+	 Ui.HeartPic = nil
+	 UiRemoveElement(Ui.ShieldPic)
+	 Ui.HeartPic = nil
+end
+
+function RemoveMusicPanel()
+	 UiRemoveElement(Ui.MusicPanelBox)
+	 UiRemoveElement(Ui.MusicPrev)
+end
+
+function RemoveKills()
+	 UiRemoveElement(Ui.KillsBox)
+	 Ui.KillsBox = nil
+	 UiRemoveElement(Ui.KillsLabel)
+	 Ui.KillsLabel = nil
+	 UiRemoveElement(Ui.Kills)
+	 Ui.Kills = nil
+end
+
+function RemoveDeaths()
+	 UiRemoveElement(Ui.DeathsBox)
+	 Ui.DeathsBox = nil
+	 UiRemoveElement(Ui.DeathsLabel)
+	 Ui.DeathsLabel = nil
+	 UiRemoveElement(Ui.Deaths)
+	 Ui.Deaths = nil
+end
+
+function RemoveKog()
+	 UiRemoveElement(Ui.KOG)
+	 Ui.KOG = nil
+	 UiRemoveElement(Ui.HammerStats)
+	 Ui.HammerStats = nil
+	 UiRemoveElement(Ui.GunStats)
+	 Ui.GunStats = nil
+	 UiRemoveElement(Ui.ShotgunStats)
+	 Ui.ShotgunStats = nil
+	 UiRemoveElement(Ui.GrenadeStats)
+	 Ui.GrenadeStats = nil
+	 UiRemoveElement(Ui.RifleStats)
+	 Ui.RifleStats = nil
+	 UiRemoveElement(Ui.HandleStats)
+	 Ui.HandleStats = nil
+	 UiRemoveElement(Ui.LifeStats)
+	 Ui.LifeStats = nil
+	 UiRemoveElement(Ui.HammerPic)
+	 Ui.HammerPic = nil
+	 UiRemoveElement(Ui.GunPic)
+	 Ui.GunPic = nil
+	 UiRemoveElement(Ui.GrenadePic)
+	 Ui.GrenadePic = nil
+	 UiRemoveElement(Ui.ShotgunPic)
+	 Ui.ShotgunPic = nil
+	 UiRemoveElement(Ui.RiflePic)
+	 Ui.RiflePic = nil
+	 UiRemoveElement(Ui.HandlePic)
+	 Ui.HandlePic = nil
+	 UiRemoveElement(Ui.LifePic)
+	 Ui.LifePic = nil
+	
+	
+	 HilfsvarOnline = 0
+end
+
+function round(num, idp)
+  local mult = 10^(idp or 0)
+  return math.floor(num * mult + 0.5) / mult
+end
+
+function UiDoIp()
+	Ui.ServerIPBox =  UiDoRect (Width / 2 + 80, 0, 200, 50, 0, 15, 15, 0.2, 0.8, 0.8, 0.5)
+	Ui.ConnectedTo = UiDoLabel (Width/2 + 85, 5, 200, 20, 0, SrvIPCon, 20, -1)
+	Ui.SrvIP = UiDoLabel (Width / 2 + 85, 25, 200, 20, 0, SrvIP, 20, -1)
+end
+
+function UiDoRatio()
+Ui.RatioBox = UiDoRect (Width - 200, Height/2 + 145, 200, 40, 0, 15, 15, 0.0, 0.2, 0.0, 0.5)
+Ui.LabelRatio = UiDoLabel (Width - 195, Height/2 + 155, 200, 20, 0,LabelRatio, 20, -1)
+end
+
+function UiDoFriendlist()
+	Ui.OnlineBox = UiDoRect (Width - 105, Height - 505, 100, Height - 250, 0, 0, 0, 0.5)
+	Ui.OnlineList = UiDoLabel (Width - 100, Height - 500, 100, 20, 0, CurOn, 20, -1)
+	Ui.nlvlpic = UiDoImageEx (Width/2, Height/2, 25, 25, 0, Testbild2)
+end
+
+function RenderRatio()
+if (Deaths == 0) then
+Ratio = Kills/1
+elseif (Deaths ~= 0) then
+Ratio = round(Kills / Deaths , 2)
+end
+UiRemoveElement(Ui.Ratio)
+
+Ui.Ratio = UiDoLabel (Width - 80, Height/2 + 155, 200, 20, 0, Ratio, 20, -1)
+end
+
+function RenderAmmoPic()
+		UiRemoveElement(Ui.AmmoPic)
+		Ui.AmmoPic = nil
+	 			Waffe = GetLocalCharacterWeapon()
+
+		if (Waffe == 0) then
+		Ui.AmmoPic =  UiDoImage (55, 65, 20, 20, 0, UiGetGameTextureID(1), 41, "")
+		end
+		if (Waffe == 1) then
+		Ui.AmmoPic =  UiDoImage (55, 65, 20, 20, 0, UiGetGameTextureID(1), 28, "")
+		end
+		if (Waffe == 2) then
+		Ui.AmmoPic =  UiDoImage (55, 65, 20, 20, 0, UiGetGameTextureID(1), 34, "")
+		end
+		if (Waffe == 3) then
+		Ui.AmmoPic =  UiDoImage (55, 65, 20, 20, 0, UiGetGameTextureID(1), 40, "")
+		end
+		if (Waffe == 4) then
+		Ui.AmmoPic =  UiDoImage (55, 65, 20, 20, 0, UiGetGameTextureID(1), 49, "")
+		end
+		if (Waffe == 5) then
+		Ui.AmmoPic =  UiDoImage (55, 65, 20, 20, 0, UiGetGameTextureID(1), 14, "")
+		end
+		if (Waffe == nil) then
+		Ui.AmmoPic =  UiDoImage (55, 65, 20, 20, 0, UiGetGameTextureID(1), 28, "")
+		end
+end
