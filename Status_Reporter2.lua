@@ -12,6 +12,7 @@ LabelKills = "No Language File Found"
 LabelDeaths = "No Language File Found"
 LabelScore = "No Language File Found"
 LabelPing = "No Language"
+LabelTime = "No Language"
 Score = 0
 Ratio = 0
 PlayerID = 0
@@ -21,6 +22,11 @@ WaffenPic = 0
 Ping = 0
 Kills = 0
 Deaths = 0
+Sek = 0
+Min = 0
+Std = 0
+
+
 Testbild = TextureLoad("Test.png")
 Testbild2 = TextureLoad("Test.png")
 a = UiGetScreenWidth() / UiGetScreenHeight()
@@ -121,6 +127,13 @@ Ui.MusicPanelBox = nil
 Ui.MusicNext = nil
 Ui.MusicPlay = nil
 Ui.MusicPrev = nil
+Ui.TimeBox = nil
+Ui.TimeLabel = nil
+Ui.Sekunden = nil
+Ui.Minuten = nil
+Ui.Stunden = nil
+
+
 function ConfigOpen(x, y, w, h)
 GetLanguage()
 py = y
@@ -282,7 +295,7 @@ function Tick(Time, ServerTick)
     iTick = iTick + 1
     Time = Time or 0
     ServerTick = ServerTick or 0
-	
+	Sek = TimeGet()
 	PlayerID = GetLocalCharacterId()
 	Score = GetPlayerScore(PlayerID)
 	Health = GetLocalCharacterHealth()
@@ -306,7 +319,7 @@ function Tick(Time, ServerTick)
 	if (HilfsvarLoggedIn >=  1) then
 	HilfsvarLoggedIn = HilfsvarLoggedIn + 1
 	end
-	if( HilfsvarLoggedIn == 100 and IsKogServer()) then
+	if( HilfsvarLoggedIn == 100 and IsKog == 1) then
 	ChatSend("/stats")
 	end
 
@@ -346,15 +359,16 @@ function Tick(Time, ServerTick)
 	  if (Score > 1000000) then
 	     Hilfsvar = 0
 	  end
-
-
+	  CalcTime()
+	  
 	 if (StateOnline() == true and MenuActive() == false) then
 		 
 		if (Online == 0) then
 			Online = 1
 		    GetLanguage()
 
-			
+			--Uhr
+			UiDoTime()
 	
 			--Punktezähler
 			UiDoScore()
@@ -408,6 +422,8 @@ function Tick(Time, ServerTick)
 	RenderKills()
 	RenderDeaths()
 	RenderPing()
+	RenderTime()
+
 		 if (IsKog == 1 and HilfsvarOnline==1) then
 		    RenderKog()
 			
@@ -581,6 +597,7 @@ RemoveMusicPanel()
 RemoveKills()
 RemoveDeaths()
 RemoveRatio()
+RemoveTime()
 	 UiRemoveElement(Ui.KillStreak)
 	 Ui.KillStreak = nil
 
@@ -751,25 +768,25 @@ function RenderAmmoPic()
 	 			Waffe = GetLocalCharacterWeapon()
 
 		if (Waffe == 0) then
-		Ui.AmmoPic =  UiDoImage (55, 65, 20, 20, 0, UiGetGameTextureID(1), 41, "")
+		Ui.AmmoPic =  UiDoImage (45, 65, 20, 20, 0, UiGetGameTextureID(1), 41, "")
 		end
 		if (Waffe == 1) then
-		Ui.AmmoPic =  UiDoImage (55, 65, 20, 20, 0, UiGetGameTextureID(1), 28, "")
+		Ui.AmmoPic =  UiDoImage (45, 65, 20, 20, 0, UiGetGameTextureID(1), 28, "")
 		end
 		if (Waffe == 2) then
-		Ui.AmmoPic =  UiDoImage (55, 65, 20, 20, 0, UiGetGameTextureID(1), 34, "")
+		Ui.AmmoPic =  UiDoImage (45, 65, 20, 20, 0, UiGetGameTextureID(1), 34, "")
 		end
 		if (Waffe == 3) then
-		Ui.AmmoPic =  UiDoImage (55, 65, 20, 20, 0, UiGetGameTextureID(1), 40, "")
+		Ui.AmmoPic =  UiDoImage (45, 65, 20, 20, 0, UiGetGameTextureID(1), 40, "")
 		end
 		if (Waffe == 4) then
-		Ui.AmmoPic =  UiDoImage (55, 65, 20, 20, 0, UiGetGameTextureID(1), 49, "")
+		Ui.AmmoPic =  UiDoImage (45, 65, 20, 20, 0, UiGetGameTextureID(1), 49, "")
 		end
 		if (Waffe == 5) then
-		Ui.AmmoPic =  UiDoImage (55, 65, 20, 20, 0, UiGetGameTextureID(1), 14, "")
+		Ui.AmmoPic =  UiDoImage (45, 65, 20, 20, 0, UiGetGameTextureID(1), 14, "")
 		end
 		if (Waffe == nil) then
-		Ui.AmmoPic =  UiDoImage (55, 65, 20, 20, 0, UiGetGameTextureID(1), 28, "")
+		Ui.AmmoPic =  UiDoImage (45, 65, 20, 20, 0, UiGetGameTextureID(1), 28, "")
 		end
 end
 
@@ -777,9 +794,9 @@ function RenderHudUi()
 		UiRemoveElement (Ui.Health)
 		UiRemoveElement (Ui.Armor)
 		UiRemoveElement (Ui.Ammo)
-		Ui.Health = UiDoLabel (75, 5, 200, 20, 0, Health, 20, -1)
-		Ui.Armor = UiDoLabel (75, 35, 200, 20, 0, Armor, 20, -1)
-		Ui.Ammo = UiDoLabel (75, 65, 200, 20, 0, Ammo, 20, -1)
+		Ui.Health = UiDoLabel (65, 5, 200, 20, 0, Health, 20, -1)
+		Ui.Armor = UiDoLabel (65, 35, 200, 20, 0, Armor, 20, -1)
+		Ui.Ammo = UiDoLabel (65, 65, 200, 20, 0, Ammo, 20, -1)
 end
 
 function RenderScore()
@@ -814,6 +831,16 @@ UiRemoveElement(Ui.Ping)
 		UiSetColor(Ui.Ping, 0.6, 0.0, 0.0, 1)
 		end
 		end
+end
+
+function RenderTime()
+		CalcTime()
+		UiRemoveElement(Ui.Sekunden)
+		UiRemoveElement(Ui.Minuten)
+		UiRemoveElement(Ui.Stunden)
+		Ui.Sekunden = UiDoLabel(230, 30, 40, 20, 0, Sek, 20, -1)
+		Ui.Minuten = UiDoLabel (205, 30, 40, 20, 0, Min, 20, -1)
+		Ui.Stunden = UiDoLabel(180, 30, 40, 20, 0, Std, 20, -1)
 end
 
 function RenderKog()
@@ -860,12 +887,12 @@ function UiDoPing()
 end
 
 function UiDoHud()
-			Ui.InfoBackground = UiDoRect (30, 0, 140, 90, 0, 15, 15, 0.1, 0.5, 0.9, 0.5)
-			Ui.HeartPic = UiDoImage (55, 5, 20, 20, 0, UiGetGameTextureID(1), 10, "")
-			Ui.Health = UiDoLabel (75, 5, 200, 20, 0, Health, 20, -1)
-			Ui.ShieldPic = UiDoImage (55, 35, 20, 20, 0, UiGetGameTextureID(1), 12, "")
-			Ui.Armor = UiDoLabel (75, 35, 200, 20, 0, Armor, 20, -1)
-			Ui.Ammo = UiDoLabel (75, 65, 200, 20, 0, Ammo, 20, -1)
+			Ui.InfoBackground = UiDoRect (20, 0, 140, 90, 0, 15, 15, 0.1, 0.5, 0.9, 0.5)
+			Ui.HeartPic = UiDoImage (45, 5, 20, 20, 0, UiGetGameTextureID(1), 10, "")
+			Ui.Health = UiDoLabel (65, 5, 200, 20, 0, Health, 20, -1)
+			Ui.ShieldPic = UiDoImage (45, 35, 20, 20, 0, UiGetGameTextureID(1), 12, "")
+			Ui.Armor = UiDoLabel (65, 35, 200, 20, 0, Armor, 20, -1)
+			Ui.Ammo = UiDoLabel (65, 65, 200, 20, 0, Ammo, 20, -1)
 end
 
 function UiDoDeaths()
@@ -880,4 +907,34 @@ end
 function UiDoKills()
 			Ui.KillsBox = UiDoRect(-15, Height/2 - 120, 170, 40, 0, 15, 15, 0.1, 0.9, 0.3, 0.5)
 			Ui.KillsLabel = UiDoLabel (5, Height/2 -110, 90, 20, 0, LabelKills, 20, -1)		
+end
+
+function UiDoTime()
+
+			Ui.TimeBox = UiDoRect(170, 0, 120, 55, 0, 15, 15, 1, 1, 1, 0.1)
+			Ui.TimeLabel = UiDoLabel(180, 5, 110, 20, 0, LabelTime, 20, -1)
+			Ui.Sekunden = UiDoLabel(230, 30, 40, 20, 0, Sek , 20, -1)
+			Ui.Minuten = UiDoLabel (205, 30, 40, 20, 0, Min, 20, -1)
+			Ui.Stunden = UiDoLabel(180, 30, 40, 20, 0, Std, 20, -1)
+
+end
+
+function CalcTime()
+			Date = GetDate("*t")
+			Sek = Date["sec"]
+			Min = Date["min"] ..":"
+			Std = Date["hour"] ..":"
+end
+
+function RemoveTime()
+ UiRemoveElement(Ui.TimeBox)
+ Ui.TimeBox = nil
+ UiRemoveElement(Ui.TimeLabel)
+ Ui.TimeLabel = nil
+ UiRemoveElement(Ui.Sekunden)
+ Ui.Sekunden = nil
+ UiRemoveElement(Ui.Minuten)
+ Ui.Minuten = nil
+ UiRemoveElement(Ui.Stunden)
+ Ui.Stunden = nil
 end
