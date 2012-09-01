@@ -286,29 +286,39 @@ function Tick(Time, ServerTick)
 	PlayerID = GetLocalCharacterId()
 	Score = GetPlayerScore(PlayerID)
 	Health = GetLocalCharacterHealth()
+	--Im spec gibts kein health, daher wird nichts angezeigt, sieht komisch aus, daher wirds für diesen fall hier gleich null gesetzt
 	if (Health == nil) then
 	Health = 0
 	end
+	-- Same goes for armor
 	Armor = GetLocalCharacterArmor()
 	if (Armor == nil) then
 	Armor = 0
 	end
+	--Ammo auch
 	Ammo = GetLocalCharacterWeaponAmmo()
 	if (Ammo == nil) then
 	Ammo = 0
 	end
+	
 	_, SrvIP = GetServerInfo()
+
 	if (HilfsvarLoggedIn >=  1) then
 	HilfsvarLoggedIn = HilfsvarLoggedIn + 1
 	end
 	if( HilfsvarLoggedIn == 100 and IsKogServer()) then
 	ChatSend("/stats")
-	
 	end
+
+	--GetPing vom spieler
 	Ping = GetPlayerPing(GetLocalCharacterId())
+	
+	--wenn esc gedrückt
 	if(MenuActive() == true and Online == 1) then
 	OptionsActive()
 	end
+
+
 	 if (Score == 0) then
 	   Hilfsvar = 50
 	 end
@@ -336,6 +346,8 @@ function Tick(Time, ServerTick)
 	  if (Score > 1000000) then
 	     Hilfsvar = 0
 	  end
+
+
 	 if (StateOnline() == true and MenuActive() == false) then
 		 
 		if (Online == 0) then
@@ -353,37 +365,16 @@ function Tick(Time, ServerTick)
 			--UiDoFriendlist()
 
 			--Ammo, Health und der ganze andere müll
-			Ui.InfoBackground = UiDoRect (30, 0, 140, 90, 0, 15, 15, 0.1, 0.5, 0.9, 0.5)
-			Ui.HeartPic = UiDoImage (55, 5, 20, 20, 0, UiGetGameTextureID(1), 10, "")
-			Ui.Health = UiDoLabel (75, 5, 200, 20, 0, Health, 20, -1)
-			Ui.ShieldPic = UiDoImage (55, 35, 20, 20, 0, UiGetGameTextureID(1), 12, "")
-			Ui.Armor = UiDoLabel (75, 35, 200, 20, 0, Armor, 20, -1)
-			Ui.Ammo = UiDoLabel (75, 65, 200, 20, 0, Ammo, 20, -1)
+			UiDoHud()
 			--KillCounter
-			Ui.KillsBox = UiDoRect(-15, Height/2 - 120, 170, 40, 0, 15, 15, 0.1, 0.9, 0.3, 0.5)
-			Ui.KillsLabel = UiDoLabel (5, Height/2 -110, 90, 20, 0, LabelKills, 20, -1)		
+			UiDoKills()
 			--DeathCounter	
-			Ui.DeathsBox = UiDoRect(-15, Height/2 - 70, 170, 40, 0, 15, 15, 0.9, 0.2, 0.1, 0.5)
-			if (lang == "bul") then
-			Ui.DeathsLabel = UiDoLabel (5, Height/2 -70, 90, 20, 0, LabelDeaths, 20, -1)		
-			elseif (lang ~= "bul") then
-			Ui.DeathsLabel = UiDoLabel (5, Height/2 -60, 90, 20, 0, LabelDeaths, 20, -1)	
-			end
+			UiDoDeaths()
 			-- Ratio
 			UiDoRatio()
 			--Ping
-			if (lang == "bul" or lang == "tr") then
-			Ui.PingBox = UiDoRect (Width/2 - 170, 0, 100, 50, 0, 15, 15, 0.6, 0.2, 0.8, 0.6)	
-			elseif (lang ~= "bul" or lang ~= "tr") then
-			Ui.PingBox = UiDoRect (Width/2 - 150, 0, 60, 50, 0, 15, 15, 0.6, 0.2, 0.8, 0.6)	
-			end
-			if (lang == "bul" or lang == "tr") then
-			Ui.PingLabel = UiDoLabel (Width/2 - 160, 5, 100, 20, 0, LabelPing, 20, -1)
-			elseif (lang ~= "tr" or lang ~= "bul") then
-			Ui.PingLabel = UiDoLabel (Width/2 - 140, 5, 50, 20, 0, LabelPing, 20, -1)
-			end
-			Ui.Ping = UiDoLabel (Width/2 - 130, 25, 50, 20, 0, Ping, 20, -1)
-			DoMusicPanel()
+			UiDoPing()
+			--DoMusicPanel()
 			
 					
         end
@@ -400,77 +391,25 @@ function Tick(Time, ServerTick)
 	IsKog = 1
 	end
 	if (GetGameType() == "Build") then
-	IsKog = 1
+	IsKog = 2
 	end
 						--Do KogShit
 
 	if (IsKog == 1 and Online == 1 and HilfsvarOnline == 0) then
-		 Ui.KOG = UiDoRect(Width/2 + 30, Height - 110, 270, 130, 0, 15, 15, 0.7, 0.6, 0.1, 0.5)
+		UiDoKog()
 	end
-	if (IsKog == 1 and Online == 1 and HilfsvarOnline == 0) then
-	HilfsvarOnline = 1
 
-
-	Ui.HammerPic = UiDoImage (Width/2 + 40, Height - 100, 40, 40, 0,UiGetGameTextureID(1), 41, "")
-	Ui.GunPic = UiDoImage (Width/2 + 40, Height -60, 40, 20, 0,UiGetGameTextureID(1), 26, "")
-	Ui.ShotgunPic = UiDoImage (Width/2 + 40, Height -30, 60, 20, 0,UiGetGameTextureID(1), 32, "")
-	Ui.GrenadePic = UiDoImage (Width/2 + 160, Height - 100, 60, 20, 0,UiGetGameTextureID(1), 38, "")
-	Ui.RiflePic = UiDoImage (Width/2 + 160, Height - 60, 60, 20, 0,UiGetGameTextureID(1), 47, "")
-
-	Ui.HandlePic = UiDoImage (Width/2 + 160, Height - 30, 20, 20, 0,UiGetGameTextureID(1), 14, "")
-
-	Ui.LifePic = UiDoImage (Width/2 + 220, Height - 30, 20, 20, 0,UiGetGameTextureID(1), 55, "")
-	end
 
 	if (StateOnline() and Online == 1) then
 	RenderRatio()
 	RenderAmmoPic()
-		
-
-		UiRemoveElement(Ui.Score)
-		Ui.Score = UiDoLabel (Hilfsvar, Height / 2 + 5, 150, 30, 0, Score, 30, -1)
-		UiRemoveElement (Ui.Health)
-		UiRemoveElement (Ui.Armor)
-		UiRemoveElement (Ui.Ammo)
-		Ui.Health = UiDoLabel (75, 5, 200, 20, 0, Health, 20, -1)
-		Ui.Armor = UiDoLabel (75, 35, 200, 20, 0, Armor, 20, -1)
-		Ui.Ammo = UiDoLabel (75, 65, 200, 20, 0, Ammo, 20, -1)
-		if (lang == "rus") then
-		UiRemoveElement(Ui.Kills)
-		Ui.Kills = UiDoLabel (90, Height/2 -110, 50, 20, 0, Kills, 20, -1)
-		elseif (lang ~= "rus") then
-		UiRemoveElement(Ui.Kills)
-		Ui.Kills = UiDoLabel (80, Height/2 -110, 50, 20, 0, Kills, 20, -1)
-		end
-		UiRemoveElement(Ui.Deaths)
-		Ui.Deaths = UiDoLabel (90, Height/2 - 60, 50, 20, 0, Deaths, 20, -1)
-		UiRemoveElement(Ui.Ping)
-		Ui.Ping = nil
-		if (Ping ~= nil) then
-		if (Ping <= 65 ) then
-		Ui.Ping = UiDoLabel (Width/2 - 130, 25, 50, 20, 0, Ping, 20, -1)
-		UiSetColor(Ui.Ping, 0.2, 0.6, 0.2, 1)
-		elseif (Ping > 65) then
-	    Ui.Ping = UiDoLabel (Width/2 - 130, 25, 50, 20, 0, Ping, 20, -1)
-		UiSetColor(Ui.Ping, 0.6, 0.0, 0.0, 1)
-		end
-		end
-		 if (IsKogServer() and HilfsvarOnline==1) then
-		    
-			UiRemoveElement(Ui.HammerStats)
-			Ui.HammerStats = UiDoLabel (Width/2 + 100, Height - 100, 60, 20, 0, StatHammer, 20, -1)
-			UiRemoveElement(Ui.GunStats)
-			Ui.GunStats = UiDoLabel (Width/2 + 100, Height - 60, 100, 20, 0, StatGun, 20, -1)
-			UiRemoveElement(Ui.ShotgunStats)
-			Ui.ShotgunStats = UiDoLabel (Width/2 + 100, Height - 30, 60, 20, 0, StatShotgun, 20, -1)
-			UiRemoveElement(Ui.GrenadeStats)
-			Ui.GrenadeStats = UiDoLabel (Width/2 + 230, Height - 100, 60, 20, 0, StatGrenade, 20, -1)
-			UiRemoveElement(Ui.RifleStats)
-			Ui.RifleStats = UiDoLabel (Width/2 + 230, Height - 60, 60, 20, 0, StatRifle, 20, -1)
-			UiRemoveElement(Ui.HandleStats)
-			Ui.HandleStats = UiDoLabel (Width/2 + 180, Height - 30, 60, 20, 0, StatHandle, 20, -1)
-			UiRemoveElement(Ui.LifeStats)
-			Ui.LifeStats = UiDoLabel (Width/2 + 240, Height - 30, 60, 20, 0, StatLife, 20, -1)
+	RenderHudUi()	
+	RenderScore()
+	RenderKills()
+	RenderDeaths()
+	RenderPing()
+		 if (IsKog == 1 and HilfsvarOnline==1) then
+		    RenderKog()
 			
 		 end
 	 end
@@ -482,6 +421,8 @@ function Tick(Time, ServerTick)
     end
 
 end
+
+
 
 function DoMusicPanel()
 Ui.MusicPanelBox = UiDoRect (20, Height/2 + 150, 300, 150, 0, 15, 15, 1, 1, 1, 0.1)
@@ -639,6 +580,7 @@ RemoveHudUi()
 RemoveMusicPanel()
 RemoveKills()
 RemoveDeaths()
+RemoveRatio()
 	 UiRemoveElement(Ui.KillStreak)
 	 Ui.KillStreak = nil
 
@@ -648,7 +590,7 @@ RemoveDeaths()
 	 end
 	 
 	 Online = 0
-	end
+end
 
 function RemovePing()
 	 UiRemoveElement(Ui.PingBox)
@@ -829,4 +771,113 @@ function RenderAmmoPic()
 		if (Waffe == nil) then
 		Ui.AmmoPic =  UiDoImage (55, 65, 20, 20, 0, UiGetGameTextureID(1), 28, "")
 		end
+end
+
+function RenderHudUi()
+		UiRemoveElement (Ui.Health)
+		UiRemoveElement (Ui.Armor)
+		UiRemoveElement (Ui.Ammo)
+		Ui.Health = UiDoLabel (75, 5, 200, 20, 0, Health, 20, -1)
+		Ui.Armor = UiDoLabel (75, 35, 200, 20, 0, Armor, 20, -1)
+		Ui.Ammo = UiDoLabel (75, 65, 200, 20, 0, Ammo, 20, -1)
+end
+
+function RenderScore()
+		UiRemoveElement(Ui.Score)
+		Ui.Score = UiDoLabel (Hilfsvar, Height / 2 + 5, 150, 30, 0, Score, 30, -1)
+end
+
+function RenderKills()
+		if (lang == "rus") then
+		UiRemoveElement(Ui.Kills)
+		Ui.Kills = UiDoLabel (90, Height/2 -110, 50, 20, 0, Kills, 20, -1)
+		elseif (lang ~= "rus") then
+		UiRemoveElement(Ui.Kills)
+		Ui.Kills = UiDoLabel (80, Height/2 -110, 50, 20, 0, Kills, 20, -1)
+		end
+end
+
+function RenderDeaths()
+		UiRemoveElement(Ui.Deaths)
+		Ui.Deaths = UiDoLabel (90, Height/2 - 60, 50, 20, 0, Deaths, 20, -1)
+end
+
+function RenderPing()
+UiRemoveElement(Ui.Ping)
+		Ui.Ping = nil
+		if (Ping ~= nil) then
+		if (Ping <= 65 ) then
+		Ui.Ping = UiDoLabel (Width/2 - 130, 25, 50, 20, 0, Ping, 20, -1)
+		UiSetColor(Ui.Ping, 0.2, 0.6, 0.2, 1)
+		elseif (Ping > 65) then
+	    Ui.Ping = UiDoLabel (Width/2 - 130, 25, 50, 20, 0, Ping, 20, -1)
+		UiSetColor(Ui.Ping, 0.6, 0.0, 0.0, 1)
+		end
+		end
+end
+
+function RenderKog()
+			UiRemoveElement(Ui.HammerStats)
+			Ui.HammerStats = UiDoLabel (Width/2 + 100, Height - 100, 60, 20, 0, StatHammer, 20, -1)
+			UiRemoveElement(Ui.GunStats)
+			Ui.GunStats = UiDoLabel (Width/2 + 100, Height - 60, 100, 20, 0, StatGun, 20, -1)
+			UiRemoveElement(Ui.ShotgunStats)
+			Ui.ShotgunStats = UiDoLabel (Width/2 + 100, Height - 30, 60, 20, 0, StatShotgun, 20, -1)
+			UiRemoveElement(Ui.GrenadeStats)
+			Ui.GrenadeStats = UiDoLabel (Width/2 + 230, Height - 100, 60, 20, 0, StatGrenade, 20, -1)
+			UiRemoveElement(Ui.RifleStats)
+			Ui.RifleStats = UiDoLabel (Width/2 + 230, Height - 60, 60, 20, 0, StatRifle, 20, -1)
+			UiRemoveElement(Ui.HandleStats)
+			Ui.HandleStats = UiDoLabel (Width/2 + 180, Height - 30, 60, 20, 0, StatHandle, 20, -1)
+			UiRemoveElement(Ui.LifeStats)
+			Ui.LifeStats = UiDoLabel (Width/2 + 240, Height - 30, 60, 20, 0, StatLife, 20, -1)
+end
+
+function UiDoKog()
+	Ui.KOG = UiDoRect(Width/2 + 30, Height - 110, 270, 130, 0, 15, 15, 0.7, 0.6, 0.1, 0.5)
+	HilfsvarOnline = 1
+	Ui.HammerPic = UiDoImage (Width/2 + 40, Height - 100, 40, 40, 0,UiGetGameTextureID(1), 41, "")
+	Ui.GunPic = UiDoImage (Width/2 + 40, Height -60, 40, 20, 0,UiGetGameTextureID(1), 26, "")
+	Ui.ShotgunPic = UiDoImage (Width/2 + 40, Height -30, 60, 20, 0,UiGetGameTextureID(1), 32, "")
+	Ui.GrenadePic = UiDoImage (Width/2 + 160, Height - 100, 60, 20, 0,UiGetGameTextureID(1), 38, "")
+	Ui.RiflePic = UiDoImage (Width/2 + 160, Height - 60, 60, 20, 0,UiGetGameTextureID(1), 47, "")
+	Ui.HandlePic = UiDoImage (Width/2 + 160, Height - 30, 20, 20, 0,UiGetGameTextureID(1), 14, "")
+	Ui.LifePic = UiDoImage (Width/2 + 220, Height - 30, 20, 20, 0,UiGetGameTextureID(1), 55, "")
+end
+
+function UiDoPing()
+			if (lang == "bul" or lang == "tr") then
+			Ui.PingBox = UiDoRect (Width/2 - 170, 0, 100, 50, 0, 15, 15, 0.6, 0.2, 0.8, 0.6)	
+			elseif (lang ~= "bul" or lang ~= "tr") then
+			Ui.PingBox = UiDoRect (Width/2 - 150, 0, 60, 50, 0, 15, 15, 0.6, 0.2, 0.8, 0.6)	
+			end
+			if (lang == "bul" or lang == "tr") then
+			Ui.PingLabel = UiDoLabel (Width/2 - 160, 5, 100, 20, 0, LabelPing, 20, -1)
+			elseif (lang ~= "tr" or lang ~= "bul") then
+			Ui.PingLabel = UiDoLabel (Width/2 - 140, 5, 50, 20, 0, LabelPing, 20, -1)
+			end
+			Ui.Ping = UiDoLabel (Width/2 - 130, 25, 50, 20, 0, Ping, 20, -1)
+end
+
+function UiDoHud()
+			Ui.InfoBackground = UiDoRect (30, 0, 140, 90, 0, 15, 15, 0.1, 0.5, 0.9, 0.5)
+			Ui.HeartPic = UiDoImage (55, 5, 20, 20, 0, UiGetGameTextureID(1), 10, "")
+			Ui.Health = UiDoLabel (75, 5, 200, 20, 0, Health, 20, -1)
+			Ui.ShieldPic = UiDoImage (55, 35, 20, 20, 0, UiGetGameTextureID(1), 12, "")
+			Ui.Armor = UiDoLabel (75, 35, 200, 20, 0, Armor, 20, -1)
+			Ui.Ammo = UiDoLabel (75, 65, 200, 20, 0, Ammo, 20, -1)
+end
+
+function UiDoDeaths()
+			Ui.DeathsBox = UiDoRect(-15, Height/2 - 70, 170, 40, 0, 15, 15, 0.9, 0.2, 0.1, 0.5)
+			if (lang == "bul") then
+			Ui.DeathsLabel = UiDoLabel (5, Height/2 -70, 90, 20, 0, LabelDeaths, 20, -1)		
+			elseif (lang ~= "bul") then
+			Ui.DeathsLabel = UiDoLabel (5, Height/2 -60, 90, 20, 0, LabelDeaths, 20, -1)	
+			end
+end
+
+function UiDoKills()
+			Ui.KillsBox = UiDoRect(-15, Height/2 - 120, 170, 40, 0, 15, 15, 0.1, 0.9, 0.3, 0.5)
+			Ui.KillsLabel = UiDoLabel (5, Height/2 -110, 90, 20, 0, LabelKills, 20, -1)		
 end
