@@ -13,6 +13,9 @@ LabelDeaths = "No Language File Found"
 LabelScore = "No Language File Found"
 LabelPing = "No Language"
 LabelTime = "No Language"
+LabelLaserCl = "No Language File Found"
+LabelLaserClOut = "No Language File Found"
+LabelLaserClIn = "No Language File Found"
 Score = 0
 Ratio = 0
 PlayerID = 0
@@ -25,7 +28,14 @@ Deaths = 0
 Sek = 0
 Min = 0
 Std = 0
-
+OuterR = 0.075
+OuterG = 0.075
+OuterB = 0.25
+OuterA = 1
+InnerR = 0.5
+InnerG = 0.5
+InnerB = 1
+InnerA = 1
 
 Testbild = TextureLoad("Test.png")
 Testbild2 = TextureLoad("Test.png")
@@ -59,6 +69,8 @@ AddEventListener("OnChat", "Chat")
 AddEventListener("OnAmmoRender", "HUDhide")
 AddEventListener("OnHealthRender", "HUDhide")
 AddEventListener("OnArmorRender", "HUDhide")
+AddEventListener("OnRenderLaser", "RenderLaser")
+
 
 Ui = table
 Ui.Active = false
@@ -132,7 +144,20 @@ Ui.TimeLabel = nil
 Ui.Sekunden = nil
 Ui.Minuten = nil
 Ui.Stunden = nil
-
+Ui.LabelLaserCl = nil
+Ui.LabelLaserClOut = nil
+Ui.LabelLaserClIn = nil
+Ui.SldR = nil
+Ui.SldG = nil
+Ui.SldB = nil
+Ui.SldA = nil
+Ui.PreviewOuter = nil
+Ui.PreviewOuter2 = nil
+Ui.PreviewInner = nil
+Ui.SldInnerR = nil
+Ui.SldInnerG = nil
+Ui.SldInnerB = nil
+Ui.SldInnerA = nil
 
 function ConfigOpen(x, y, w, h)
 GetLanguage()
@@ -145,6 +170,64 @@ px = x
 	 Ui.CreditsLabel = UiDoLabel (x + 220, y + 10, 150, 20, 0, "Language File by:", 20, -1)
 	 Ui.Credits = UiDoLabel (x + 380, y + 10, 100, 20, 0, Credits, 20, -1)
 	 Ui.ApplyBtn = UiDoButton (x + 60, y + 60, 100, 20, 0, "Apply", "Apply")
+	 Ui.LabelLaserCl = UiDoLabel (x + 10, y + 90, 400, 20, 0, LabelLaserCl, 20, -1)
+	 Ui.LabelLaserClOut = UiDoLabel(x + 10, y + 120, 400, 20, 0, LabelLaserClOut, 20, -1)
+	 Ui.SldR = UiDoSlider (x + 10, y + 150, 400, 15, 0, OuterR, "SetOuterR")
+	 Ui.SldG = UiDoSlider (x + 10, y + 170, 400, 15, 0, OuterG, "SetOuterG")
+	 Ui.SldB = UiDoSlider (x + 10, y + 190, 400, 15, 0, OuterB, "SetOuterB")
+	 Ui.SldA = UiDoSlider (x + 10, y + 210, 400, 15, 0, OuterA,	"SetOuterA")
+	 Ui.LabelLaserClIn = UiDoLabel(x + 10, y + 230, 400, 20, 0, LabelLaserClIn, 20, -1)
+	 Ui.SldInnerR = UiDoSlider (x + 10, y + 250, 400, 15, 0, InnerR, "SetInnerR")
+	 Ui.SldInnerG = UiDoSlider (x + 10, y + 270, 400, 15, 0, InnerG, "SetInnerG")
+	 Ui.SldInnerB = UiDoSlider (x + 10, y + 290, 400, 15, 0, InnerB, "SetInnerB")
+	 Ui.SldInnerA = UiDoSlider (x + 10, y + 310, 400, 15, 0, InnerA, "SetInnerA")
+	 Ui.PreviewOuter = UiDoRect (x + 10, y + 330, 200, 1, 0, 0, 0, OuterR, OuterG, OuterB, OuterA)
+	 Ui.PreviewInner = UiDoRect (x + 10, y + 331, 200, 5, 0, 0, 0, InnerR, InnerG, InnerB, OuterA)
+	 Ui.PreviewOuter2 = UiDoRect (x + 10, y + 336, 200, 1, 0, 0, 0, OuterR, OuterG, OuterB, OuterA)
+end
+
+function SetOuterR(val)
+OuterR = val
+UiSetColor(Ui.PreviewOuter, OuterR, OuterG, OuterB, OuterA)
+UiSetColor(Ui.PreviewOuter2, OuterR, OuterG, OuterB, OuterA)
+end
+
+function SetOuterG(val)
+OuterG = val
+UiSetColor(Ui.PreviewOuter, OuterR, OuterG, OuterB, OuterA)
+UiSetColor(Ui.PreviewOuter2, OuterR, OuterG, OuterB, OuterA)
+end
+
+function SetOuterB(val)
+OuterB = val
+UiSetColor(Ui.PreviewOuter, OuterR, OuterG, OuterB, OuterA)
+UiSetColor(Ui.PreviewOuter2, OuterR, OuterG, OuterB, OuterA)
+end
+
+function SetOuterA(val)
+OuterA = val
+UiSetColor(Ui.PreviewOuter, OuterR, OuterG, OuterB, OuterA)
+UiSetColor(Ui.PreviewOuter2, OuterR, OuterG, OuterB, OuterA)
+end
+
+function SetInnerR(val)
+InnerR = val
+UiSetColor(Ui.PreviewInner, InnerR, InnerG, InnerB, InnerA)
+end
+
+function SetInnerG(val)
+InnerG = val
+UiSetColor(Ui.PreviewInner, InnerR, InnerG, InnerB, InnerA)
+end
+
+function SetInnerB(val)
+InnerB = val
+UiSetColor(Ui.PreviewInner, InnerR, InnerG, InnerB, InnerA)
+end
+
+function SetInnerA(val)
+InnerA = val
+UiSetColor(Ui.PreviewInner, InnerR, InnerG, InnerB, InnerA)
 end
 
 function Apply()
@@ -170,6 +253,18 @@ End
 function OnRenderBackground()
 	 RenderTexture (Testbild, 0, 0, 300 * a, 300)
 end
+function RenderLaser (FromX, FromY, ToX, ToY, OutR, OutG, OutB, OutA, InnR, InnG, InnB, InnA)
+OutR = OuterR 
+OutG = OuterG 
+OutB = OuterB
+OutA = OuterA
+InnR = InnerR
+InnG = InnerG
+InnB = InnerB
+InnA = InnerA
+return render, OuterR, OuterG, OuterB, OuterA, InnerR, InnerG, InnerB, InnerA
+end
+
 
 function Chat(Text, ID, Team)
 
@@ -232,12 +327,36 @@ UiRemoveElement (Ui.BaseRect)
 lang = UiGetText(Ui.InsertLang)
 configout = io.open("lua/Status_Reporter.config","wb")
  configout:write ("lang = \"" ..lang.. "\"\n")
+ configout:write ("OuterR = " ..OuterR)
+ configout:write ("OuterG = " ..OuterG)
+ configout:write ("OuterB = " ..OuterB)
+ configout:write ("OuterA = " ..OuterA)
+ configout:write ("InnerR = " ..InnerR)
+ configout:write ("InnerG = " ..InnerG)
+ configout:write ("InnerB = " ..InnerB)
+ configout:write ("InnerA = " ..InnerA)
 configout:close()
 UiRemoveElement (Ui.InsertLang)
 UiRemoveElement (Ui.LanguageLabel)
 UiRemoveElement (Ui.CreditsLabel)
 UiRemoveElement (Ui.Credits)
 UiRemoveElement (Ui.ApplyBtn)
+UiRemoveElement(Ui.SldR)
+UiRemoveElement(Ui.SldG)
+UiRemoveElement(Ui.SldB)
+UiRemoveElement(Ui.PreviewOuter)
+UiRemoveElement(Ui.PreviewOuter2)
+UiRemoveElement(Ui.SldInnerR)
+UiRemoveElement(Ui.SldInnerG)
+UiRemoveElement(Ui.SldInnerB)
+UiRemoveElement(Ui.PreviewInner)
+UiRemoveElement(Ui.LabelLaserCl)
+UiRemoveElement(Ui.LabelLaserClOut)
+UiRemoveElement(Ui.LabelLaserClIn)
+UiRemoveElement(Ui.SldInnerA)
+UiRemoveElement(Ui.SldA)
+
+--Refresh the Configs
 Include ("lua/Status_Reporter.config")
 
 end
@@ -584,7 +703,7 @@ Online = 0
 	 Deaths = 0
 	 Waffe = nil
 	 Ui.AmmoPic = nil
-
+	 RemoveTime()
 end
 
 function OptionsActive()
@@ -768,25 +887,25 @@ function RenderAmmoPic()
 	 			Waffe = GetLocalCharacterWeapon()
 
 		if (Waffe == 0) then
-		Ui.AmmoPic =  UiDoImage (45, 65, 20, 20, 0, UiGetGameTextureID(1), 41, "")
+		Ui.AmmoPic =  UiDoImage (45, 65, 20, 20, 0, UiGetGameTextureID(), 41, "")
 		end
 		if (Waffe == 1) then
-		Ui.AmmoPic =  UiDoImage (45, 65, 20, 20, 0, UiGetGameTextureID(1), 28, "")
+		Ui.AmmoPic =  UiDoImage (45, 65, 20, 20, 0, UiGetGameTextureID(), 28, "")
 		end
 		if (Waffe == 2) then
-		Ui.AmmoPic =  UiDoImage (45, 65, 20, 20, 0, UiGetGameTextureID(1), 34, "")
+		Ui.AmmoPic =  UiDoImage (45, 65, 20, 20, 0, UiGetGameTextureID(), 34, "")
 		end
 		if (Waffe == 3) then
-		Ui.AmmoPic =  UiDoImage (45, 65, 20, 20, 0, UiGetGameTextureID(1), 40, "")
+		Ui.AmmoPic =  UiDoImage (45, 65, 20, 20, 0, UiGetGameTextureID(), 40, "")
 		end
 		if (Waffe == 4) then
-		Ui.AmmoPic =  UiDoImage (45, 65, 20, 20, 0, UiGetGameTextureID(1), 49, "")
+		Ui.AmmoPic =  UiDoImage (45, 65, 20, 20, 0, UiGetGameTextureID(), 49, "")
 		end
 		if (Waffe == 5) then
-		Ui.AmmoPic =  UiDoImage (45, 65, 20, 20, 0, UiGetGameTextureID(1), 14, "")
+		Ui.AmmoPic =  UiDoImage (45, 65, 20, 20, 0, UiGetGameTextureID(), 14, "")
 		end
 		if (Waffe == nil) then
-		Ui.AmmoPic =  UiDoImage (45, 65, 20, 20, 0, UiGetGameTextureID(1), 28, "")
+		Ui.AmmoPic =  UiDoImage (45, 65, 20, 20, 0, UiGetGameTextureID(), 28, "")
 		end
 end
 
@@ -888,9 +1007,9 @@ end
 
 function UiDoHud()
 			Ui.InfoBackground = UiDoRect (20, 0, 140, 90, 0, 15, 15, 0.1, 0.5, 0.9, 0.5)
-			Ui.HeartPic = UiDoImage (45, 5, 20, 20, 0, UiGetGameTextureID(1), 10, "")
+			Ui.HeartPic = UiDoImage (45, 5, 20, 20, 0, UiGetGameTextureID(), 10, "")
 			Ui.Health = UiDoLabel (65, 5, 200, 20, 0, Health, 20, -1)
-			Ui.ShieldPic = UiDoImage (45, 35, 20, 20, 0, UiGetGameTextureID(1), 12, "")
+			Ui.ShieldPic = UiDoImage (45, 35, 20, 20, 0, UiGetGameTextureID(), 12, "")
 			Ui.Armor = UiDoLabel (65, 35, 200, 20, 0, Armor, 20, -1)
 			Ui.Ammo = UiDoLabel (65, 65, 200, 20, 0, Ammo, 20, -1)
 end
@@ -921,9 +1040,22 @@ end
 
 function CalcTime()
 			Date = GetDate("*t")
+			if (tonumber(Date["sec"]) < 10) then
+			Sek = "0" ..Date["sec"]
+			else
 			Sek = Date["sec"]
+			end
+			
+			if (tonumber(Date["min"]) < 10) then
+			Min = "0" ..Date["min"].. ":"
+			else
 			Min = Date["min"] ..":"
+			end
+			if (tonumber(Date["hour"]) < 10) then
+			Std = "  "..Date["hour"] ..":"
+			else
 			Std = Date["hour"] ..":"
+			end
 end
 
 function RemoveTime()
